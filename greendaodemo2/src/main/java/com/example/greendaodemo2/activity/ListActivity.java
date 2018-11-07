@@ -77,6 +77,7 @@ public class ListActivity extends AppCompatActivity {
         if (shops != null && shops.size() > 0) {
             for (int i = 0; i < shops.size(); i++) {
                 Log.i(TAG, "onCreate: id=" + shops.get(i).getId());
+                Log.i(TAG, "onCreate: goodsId=" + shops.get(i).getGoodsId());
             }
         }
 
@@ -131,6 +132,7 @@ public class ListActivity extends AppCompatActivity {
                         intent1.putExtra("number", mAdapter.getItem(position).getNumber() + "");
                         intent1.putExtra("time", mAdapter.getItem(position).getAddTime() + "");*/
                         intent1.putExtra("position", position + 1 + "");
+                        intent1.putExtra("goods_id", mAdapter.getItem(position).getGoodsId());
                         startActivity(intent1);
 
 
@@ -139,6 +141,7 @@ public class ListActivity extends AppCompatActivity {
                         Log.i(TAG, "onItemClick: tv_update position=" + position);
                         Intent intent = new Intent(ListActivity.this, AddAndUpdateActivity.class);
                         intent.putExtra("position", position + 1 + "");
+                        intent.putExtra("goods_id", mAdapter.getItem(position).getGoodsId());
                         startActivityForResult(intent, 10);
 
 
@@ -173,7 +176,15 @@ public class ListActivity extends AppCompatActivity {
             public void onItemClick(Object o, int position) {
                 switch (position) {
                     case 1:
-                        shopDao.deleteByKey((long) (deletePosition + 1));
+                        //shopDao.deleteByKey((long) (deletePosition + 1));
+
+                        String goodsId = mAdapter.getItem(deletePosition).getGoodsId();
+                        Log.i(TAG, "onItemClick: goodsId="+goodsId);
+                        Shop shop = shopDao.queryBuilder().where(
+                                ShopDao.Properties.GoodsId.eq(goodsId))
+                                .unique();
+                        shopDao.delete(shop);
+
                         List<Shop> shops = shopDao.loadAll();
                         mAdapter.setNewData(shops);
 

@@ -1,5 +1,6 @@
 package com.example.greendaodemo2.utils;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,5 +46,14 @@ public class StringUtils {
     public static boolean isZipNO(String zipString) {
         String str = "^[1-9][0-9]{5}$";
         return Pattern.compile(str).matcher(zipString).matches();
+    }
+
+    //生成32位的唯一值，用来做主键 例如：9fb5c2ef-2248-4940-9262-d50b2680cb0f
+    public static String getUUID() {
+        UUID uuid = UUID.randomUUID();
+        String uuidStr = uuid.toString();
+        System.out.println("StringUtils.getUUID uuidStr="+uuidStr);
+        return uuidStr;
+
     }
 }

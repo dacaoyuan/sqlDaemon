@@ -2,7 +2,7 @@
 
 - app，app2 展示的是ORMLite 数据库的使用的使用
 - greendaodemo，展示的是GreenDao3.2 数据库框架的基本使用
-- app4 展示的是GreenDao3.2 数据库框架的实战使用
+- greendaodemo2 展示的是GreenDao3.2 数据库框架的实战使用
 
 ### GreenDao数据库的使用大概步骤
 1：在工程 bugild.gradle 进行如下插件配置

@@ -16,6 +16,7 @@ import com.example.greendaodemo2.R;
 import com.example.greendaodemo2.dao.DaoSession;
 import com.example.greendaodemo2.dao.ShopDao;
 import com.example.greendaodemo2.data.Shop;
+import com.example.greendaodemo2.utils.StringUtils;
 import com.example.greendaodemo2.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -40,7 +41,9 @@ public class AddAndUpdateActivity extends AppCompatActivity {
     @BindView(R.id.ok)
     Button mOk;
 
-    private String id;
+    //private String id;
+    private String goods_id;
+    private Shop shop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +60,19 @@ public class AddAndUpdateActivity extends AppCompatActivity {
             mTitle.setText("添加");
         } else {
             mTitle.setText("修改");
-            id = getIntent().getStringExtra("position");
-            Log.i(TAG, "onCreate: id=" + id);
 
 
-            Shop shop = shopDao.load(Long.parseLong(id));
-            //List<Shop> list = shopDao.queryBuilder().where(ShopDao.Properties.Id.eq(id)).list();
-            //Shop shop = list.get(0);
+            //id = getIntent().getStringExtra("position");
+            //Log.i(TAG, "onCreate: id=" + id);
+            //Shop shop = shopDao.load(Long.parseLong(id));
+
+
+            goods_id = getIntent().getStringExtra("goods_id");
+            Log.i(TAG, "onCreate: goods_id=" + goods_id);
+            shop = shopDao.queryBuilder()
+                    .where(ShopDao.Properties.GoodsId.eq(goods_id))
+                    .unique();
+
 
             mNumber.setText(shop.getNumber() + "");
             time.setText(shop.getAddTime());
@@ -86,19 +95,20 @@ public class AddAndUpdateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (isLegal()) {
 
-                    Shop shop1 = new Shop();
 
                     if (flag != null && flag.equals("add")) {
+                        Shop shop1 = new Shop();
+                        shop1.setGoodsId(StringUtils.getUUID());
                         shop1.setAddTime(strTime);
                         shop1.setName(strShop_name);
                         shop1.setNumber(Integer.parseInt(strNumber));
                         shopDao.insertOrReplace(shop1);
                     } else {
-                        shop1.setId(Long.parseLong(id));
-                        shop1.setAddTime(strTime);
-                        shop1.setName(strShop_name);
-                        shop1.setNumber(Integer.parseInt(strNumber));
-                        shopDao.update(shop1);
+                        //shop1.setId(Long.parseLong(id));
+                        shop.setAddTime(strTime);
+                        shop.setName(strShop_name);
+                        shop.setNumber(Integer.parseInt(strNumber));
+                        shopDao.update(shop);
                     }
 
 

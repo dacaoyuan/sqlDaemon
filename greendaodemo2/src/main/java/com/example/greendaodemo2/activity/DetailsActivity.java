@@ -45,20 +45,20 @@ public class DetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
-        String id = getIntent().getStringExtra("position");
-
-     /*   String name = getIntent().getStringExtra("name");
-        String number = getIntent().getStringExtra("number");
-        String time = getIntent().getStringExtra("time");*/
-
 
         DaoSession daoInstant = MyApplication.getDaoInstant();
         final ShopDao shopDao = daoInstant.getShopDao();
 
-      /*  List<Shop> list = shopDao.queryBuilder().where(ShopDao.Properties.Id.eq(id)).list();
-        Shop shop = list.get(0);*/
 
-        Shop shop = shopDao.loadByRowId(Long.parseLong(id));
+        String id = getIntent().getStringExtra("position");
+        //Shop shop = shopDao.loadByRowId(Long.parseLong(id));
+
+
+        String goods_id = getIntent().getStringExtra("goods_id");
+        Shop shop = shopDao.queryBuilder()
+                .where(ShopDao.Properties.GoodsId.eq(goods_id))
+                .unique();
+
 
 
         mNumber.setText(shop.getNumber() + "");

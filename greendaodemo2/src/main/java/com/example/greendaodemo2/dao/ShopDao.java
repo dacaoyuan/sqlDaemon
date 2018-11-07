@@ -25,9 +25,10 @@ public class ShopDao extends AbstractDao<Shop, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property AddTime = new Property(2, String.class, "addTime", false, "ADD_TIME");
-        public final static Property Number = new Property(3, int.class, "number", false, "NUMBER");
+        public final static Property GoodsId = new Property(1, String.class, "goodsId", false, "GOODS_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property AddTime = new Property(3, String.class, "addTime", false, "ADD_TIME");
+        public final static Property Number = new Property(4, int.class, "number", false, "NUMBER");
     }
 
 
@@ -43,10 +44,11 @@ public class ShopDao extends AbstractDao<Shop, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SHOP\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"ADD_TIME\" TEXT," + // 2: addTime
-                "\"NUMBER\" INTEGER NOT NULL );"); // 3: number
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"GOODS_ID\" TEXT UNIQUE ," + // 1: goodsId
+                "\"NAME\" TEXT," + // 2: name
+                "\"ADD_TIME\" TEXT," + // 3: addTime
+                "\"NUMBER\" INTEGER NOT NULL );"); // 4: number
     }
 
     /** Drops the underlying database table. */
@@ -64,16 +66,21 @@ public class ShopDao extends AbstractDao<Shop, Long> {
             stmt.bindLong(1, id);
         }
  
+        String goodsId = entity.getGoodsId();
+        if (goodsId != null) {
+            stmt.bindString(2, goodsId);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String addTime = entity.getAddTime();
         if (addTime != null) {
-            stmt.bindString(3, addTime);
+            stmt.bindString(4, addTime);
         }
-        stmt.bindLong(4, entity.getNumber());
+        stmt.bindLong(5, entity.getNumber());
     }
 
     @Override
@@ -85,16 +92,21 @@ public class ShopDao extends AbstractDao<Shop, Long> {
             stmt.bindLong(1, id);
         }
  
+        String goodsId = entity.getGoodsId();
+        if (goodsId != null) {
+            stmt.bindString(2, goodsId);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String addTime = entity.getAddTime();
         if (addTime != null) {
-            stmt.bindString(3, addTime);
+            stmt.bindString(4, addTime);
         }
-        stmt.bindLong(4, entity.getNumber());
+        stmt.bindLong(5, entity.getNumber());
     }
 
     @Override
@@ -106,9 +118,10 @@ public class ShopDao extends AbstractDao<Shop, Long> {
     public Shop readEntity(Cursor cursor, int offset) {
         Shop entity = new Shop( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // addTime
-            cursor.getInt(offset + 3) // number
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // goodsId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // addTime
+            cursor.getInt(offset + 4) // number
         );
         return entity;
     }
@@ -116,9 +129,10 @@ public class ShopDao extends AbstractDao<Shop, Long> {
     @Override
     public void readEntity(Cursor cursor, Shop entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setAddTime(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setNumber(cursor.getInt(offset + 3));
+        entity.setGoodsId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setAddTime(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setNumber(cursor.getInt(offset + 4));
      }
     
     @Override
